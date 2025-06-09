@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hollywood Hacker Terminal</title>
-  <style>
-    body {
-      margin: 0;
-      background-color: black;
-      color: #00FF00;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 16px;
-      padding: 20px;
-      overflow: hidden;
-    }
-    #terminal {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      height: 100vh;
-      overflow-y: auto;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      background-color: #00FF00;
-      animation: blink 1s step-start infinite;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hollywood Hacker Terminal</title>
+<style>
+  body {
+    margin: 0;
+    background-color: black;
+    color: #00FF00;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    padding: 20px;
+    overflow: hidden;
+  }
+  #terminal {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background-color: #00FF00;
+    animation: blink 1s step-start infinite;
+    vertical-align: bottom;
+  }
+</style>
 </head>
 <body>
   <div id="terminal"></div>
+
   <script>
-    const terminal = document.getElementById("terminal");
+    const terminal = document.getElementById('terminal');
     const commands = [
       "Establishing secure connection...",
       "Bypassing firewall...",
@@ -46,28 +48,31 @@
       "Access granted. Welcome, Agent."
     ];
 
-    let index = 0;
     let line = 0;
+    let charIndex = 0;
 
-    const typeLine = () => {
+    function type() {
       if (line < commands.length) {
-        const command = commands[line];
-        if (index <= command.length) {
-          terminal.innerHTML = terminal.innerHTML.replace(/<span class=\"cursor\"><\\/span>$/, '') +
-            command.substring(0, index++) + '<span class="cursor"></span>';
-          setTimeout(typeLine, 50);
+        const currentLine = commands[line];
+        if (charIndex <= currentLine.length) {
+          terminal.innerHTML = terminal.innerHTML.replace(/<span class="cursor"><\/span>$/, '') +
+            currentLine.substring(0, charIndex) + '<span class="cursor"></span>';
+          charIndex++;
+          terminal.scrollTop = terminal.scrollHeight;  // auto scroll
+          setTimeout(type, 50);
         } else {
-          terminal.innerHTML = terminal.innerHTML.replace(/<span class=\"cursor\"><\\/span>$/, '') + '\n';
+          terminal.innerHTML = terminal.innerHTML.replace(/<span class="cursor"><\/span>$/, '') + '\n';
           line++;
-          index = 0;
-          setTimeout(typeLine, 600);
+          charIndex = 0;
+          setTimeout(type, 600);
         }
       } else {
         terminal.innerHTML += "\n[HACKING COMPLETE]" + '<span class="cursor"></span>';
+        terminal.scrollTop = terminal.scrollHeight;
       }
-    };
+    }
 
-    typeLine();
+    type();
   </script>
 </body>
 </html>
