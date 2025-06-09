@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacking Terminal</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 16px;
+      padding: 20px;
+      overflow: hidden;
+    }
+    #terminal {
+      white-space: pre-wrap;
+      animation: blinkCursor 1s step-end infinite;
+    }
+    @keyframes blinkCursor {
+      50% { border-right: 2px solid #00ff00; }
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <script>
+    const terminal = document.getElementById("terminal");
+    const lines = [
+      "Initializing hack sequence...",
+      "Connecting to server 192.168.0.1...",
+      "Bypassing firewall...",
+      "Accessing mainframe...",
+      "Brute-forcing password: ********",
+      "Password found: ********",
+      "Downloading credentials...",
+      "User: admin",
+      "Pass: hunter2",
+      "Injecting backdoor...",
+      "Tracing location: 34.0522 N, 118.2437 W",
+      "ACCESS GRANTED",
+      "\nWelcome Agent. Mission Initiated."
+    ];
+
+    let index = 0;
+    function typeLine() {
+      if (index < lines.length) {
+        const line = lines[index];
+        let charIndex = 0;
+        const typer = setInterval(() => {
+          terminal.textContent += line[charIndex++];
+          if (charIndex >= line.length) {
+            terminal.textContent += "\n";
+            clearInterval(typer);
+            index++;
+            setTimeout(typeLine, 500);
+          }
+        }, 50);
+      }
+    }
+
+    typeLine();
+  </script>
+</body>
+</html>
