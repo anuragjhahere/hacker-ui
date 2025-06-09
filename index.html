@@ -3,61 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hacking Terminal</title>
+  <title>Hollywood Hacker Terminal</title>
   <style>
     body {
+      margin: 0;
       background-color: black;
-      color: #00ff00;
+      color: #00FF00;
       font-family: 'Courier New', Courier, monospace;
       font-size: 16px;
       padding: 20px;
       overflow: hidden;
     }
+
     #terminal {
       white-space: pre-wrap;
-      animation: blinkCursor 1s step-end infinite;
+      word-wrap: break-word;
+      height: 100vh;
+      overflow-y: auto;
     }
-    @keyframes blinkCursor {
-      50% { border-right: 2px solid #00ff00; }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #00FF00;
+      animation: blink 1s step-start infinite;
     }
   </style>
 </head>
 <body>
   <div id="terminal"></div>
+  <audio id="typeSound" src="typing.mp3" preload="auto"></audio>
+
   <script>
     const terminal = document.getElementById("terminal");
-    const lines = [
-      "Initializing hack sequence...",
-      "Connecting to server 192.168.0.1...",
+    const typeSound = document.getElementById("typeSound");
+
+    const commands = [
+      "Establishing secure connection...",
       "Bypassing firewall...",
       "Accessing mainframe...",
-      "Brute-forcing password: ********",
-      "Password found: ********",
       "Downloading credentials...",
-      "User: admin",
-      "Pass: hunter2",
-      "Injecting backdoor...",
-      "Tracing location: 34.0522 N, 118.2437 W",
-      "ACCESS GRANTED",
-      "\nWelcome Agent. Mission Initiated."
+      "Decrypting passwords...",
+      "Injection successful.",
+      "Access granted. Welcome, Agent."
     ];
 
     let index = 0;
-    function typeLine() {
-      if (index < lines.length) {
-        const line = lines[index];
-        let charIndex = 0;
-        const typer = setInterval(() => {
-          terminal.textContent += line[charIndex++];
-          if (charIndex >= line.length) {
-            terminal.textContent += "\n";
-            clearInterval(typer);
-            index++;
-            setTimeout(typeLine, 500);
-          }
-        }, 50);
+    let line = 0;
+
+    const typeLine = () => {
+      if (line < commands.length) {
+        const command = commands[line];
+        if (index <= command.length) {
+          terminal.innerHTML = terminal.innerHTML.replace(/<span class=\"cursor\"><\\/span>$/, '') +
+            command.substring(0, index++) + '<span class="cursor"></span>';
+          typeSound.currentTime = 0;
+          typeSound.play();
+          setTimeout(typeLine, 50);
+        } else {
+          terminal.innerHTML = terminal.innerHTML.replace(/<span class=\"cursor\"><\\/span>$/, '') + '\n';
+          line++;
+          index = 0;
+          setTimeout(typeLine, 600);
+        }
+      } else {
+        terminal.innerHTML += "\n[HACKING COMPLETE]" + '<span class="cursor"></span>';
       }
-    }
+    };
 
     typeLine();
   </script>
